@@ -1,22 +1,24 @@
 require_relative 'huffman_nodes'
+require 'pry'
 
-def build_huffman_tree(input_array, input_character_freq)
+def build_huffman_tree(input_array, character_freq)
   q = []
-  for i in 0..input_array.length
-    new_node = HuffmanNode.new(input_array[i], input_character_freq[input_array[i]])
-    q << new_node
+  accounted_for = []
+  for i in 0..(input_array.length - 1)
+    if !accounted_for.include?(input_array[i])
+      new_node = HuffmanNode.new(input_array[i], (character_freq[input_array[i]].to_f / input_array.length))
+      q << new_node
+      accounted_for << input_array[i]
+    end
   end
   for i in 0..(input_array.length - 1)
     x = q.min_by { |node| node.freq }
-    q.delete(x)
+    q -= [x]
     y = q.min_by { |node| node.freq }
-    q.delete(y)
+    q -= [y]
     z = JoinNode.new((x.freq + y.freq), x, y)
     if q.empty?
       return z
-    elsif q.length == 1
-      return JoinNode.new((z.freq + q[0].freq), z, q[0]) if z.freq <= q[0].freq
-      return JoinNode.new((z.freq + q[0].freq), q[0], z) if z.freq > q[0].freq
     else
       q << z
     end
@@ -25,10 +27,10 @@ end
 
 def tree_traversal(node, code_index)
   if node.class == JoinNode
-    node.left_child.code += "0"
-    node.right_child.code += "1"
-    node_traversal(node.left_child, code_index)
-    node_traversal(node.right_child, code_index)
+    node.left_child.code = node.code + "0"
+    node.right_child.code = node.code + "1"
+    tree_traversal(node.left_child, code_index)
+    tree_traversal(node.right_child, code_index)
   else
     code_index[node.char] = node.code
   end
