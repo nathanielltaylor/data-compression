@@ -1,5 +1,4 @@
 require_relative 'huffman_nodes'
-require 'pry'
 
 def get_frequencies(char_array, char_freqs)
   char_array.each do |char|
@@ -52,17 +51,19 @@ def huffman_compress(text)
   tree_traversal(first_node, code_index)
   compressed = ""
   char_array.each { |char| compressed << code_index[char] }
-  compressed
+  { compression: compressed, code_index: code_index }
 end
 
-def huffman_decompress(code)
-
+def huffman_decompress(code, code_index)
+  code_index = code_index.invert
+  decompressed = ""
+  cache = ""
+  while code.length != 0
+    cache += code.slice!(0)
+    if code_index.has_key?(cache)
+      decompressed += code_index[cache]
+      cache = ""
+    end
+  end
+  decompressed
 end
-
-dna = "TAATTAGAAATTCTATTATA"
-
-code = huffman_compress(dna)
-puts code
-
-decode = huffman_decompress(code)
-puts decode
