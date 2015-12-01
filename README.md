@@ -1,0 +1,2 @@
+### Huffman Compression
+Compresses text by building a binary tree of all of the characters used in the input text based on their frequency, which it then uses to assign each of these characters a prefix-free bit code. The compressed text encodes each character as a sequence of 1s and 0s unique to it. Since none of these codes are prefixes of each other, decompression can be achieved simply by parsing the binary string and translating each recognizable code back to its character using the values from the binary tree
