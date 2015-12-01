@@ -51,14 +51,15 @@ def huffman_compress(text)
   tree_traversal(first_node, code_index)
   compressed = ""
   char_array.each { |char| compressed << code_index[char] }
-  { compression: compressed, code_index: code_index }
+  { compression: [compressed].pack("B*"), code_index: code_index }
 end
 
 def huffman_decompress(code, code_index)
+  code = code.unpack("B*")[0]
   code_index = code_index.invert
   decompressed = ""
   cache = ""
-  while code.length != 0
+  while code.length > 0
     cache += code.slice!(0)
     if code_index.has_key?(cache)
       decompressed += code_index[cache]
