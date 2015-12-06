@@ -6,4 +6,6 @@
 - Since none of these codes are prefixes of each other, decompression can be achieved by packing the binary data back into a string, parsing it, and translating each recognizable code back to its character using the character-code pairs from the binary tree
 
 ### LZW Compression
-- Compresses text by assigning common character sequences in it to the one-byte integers 0 - 255. These character sequences can be words, but do not have to be. Often, they are phrases consisting of several short, common, connector words
+- Compresses text by assigning each character subsequence in it to integers, starting with the 266 single ASCII characters. Each subsequent subsequence is then assigned incrementing integers, beginning with 266 (ASCII numbering starts at 0)
+- The process saves this dictionary so subsequences are assigned the same code each time they reappear
+- Fortunately, and in contrast to Huffman compression, the dictionary does not need to be stored in order to later decompress the text. The decompression process rebuilds it from scratch, again using the ASCII characters as basic building blocks, to invert the process
